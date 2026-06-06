@@ -18,20 +18,16 @@ func MainHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	path := filepath.Join(filepath.Dir(pwd), "index.html")
 
-	f, err := os.Open(path)
+	f, err := os.ReadFile(path)
 	if err != nil {
 		http.Error(w, "internal error", http.StatusInternalServerError)
 		return
 	}
-	defer f.Close()
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
 
-	_, err = io.Copy(w, f)
-	if err != nil {
-		http.Error(w, "internal error", http.StatusInternalServerError)
-	}
+	w.Write(f)
 }
 
 func UploadHandler(w http.ResponseWriter, r *http.Request) {
