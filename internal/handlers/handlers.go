@@ -13,14 +13,14 @@ import (
 func MainHandler(w http.ResponseWriter, r *http.Request) {
 	pwd, err := os.Getwd()
 	if err != nil {
-		http.Error(w, "internal error", 1)
+		http.Error(w, "internal error", http.StatusInternalServerError)
 		return
 	}
 	path := filepath.Join(filepath.Dir(pwd), "index.html")
 
 	f, err := os.Open(path)
 	if err != nil {
-		http.Error(w, "internal error", 2)
+		http.Error(w, "internal error", http.StatusInternalServerError)
 		return
 	}
 	defer f.Close()
@@ -30,7 +30,7 @@ func MainHandler(w http.ResponseWriter, r *http.Request) {
 
 	_, err = io.Copy(w, f)
 	if err != nil {
-		http.Error(w, "internal error", 3)
+		http.Error(w, "internal error", http.StatusInternalServerError)
 	}
 }
 
