@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"io"
+	"log"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -13,13 +14,15 @@ import (
 func MainHandler(w http.ResponseWriter, r *http.Request) {
 	pwd, err := os.Getwd()
 	if err != nil {
+		log.Printf("pwd %q: %v", pwd, err) // увидишь точный путь и причину
 		http.Error(w, "internal error", http.StatusInternalServerError)
 		return
 	}
-	path := filepath.Join(filepath.Dir(pwd), "index.html")
+	path := filepath.Join(pwd, "index.html")
 
 	f, err := os.ReadFile(path)
 	if err != nil {
+		log.Printf("read %q: %v", path, err) // увидишь точный путь и причину
 		http.Error(w, "internal error", http.StatusInternalServerError)
 		return
 	}
