@@ -13,14 +13,14 @@ import (
 func MainHandler(w http.ResponseWriter, r *http.Request) {
 	pwd, err := os.Getwd()
 	if err != nil {
-		http.Error(w, "internal error", http.StatusInternalServerError)
+		http.Error(w, "internal error", 1)
 		return
 	}
 	path := filepath.Join(filepath.Dir(pwd), "index.html")
 
 	f, err := os.Open(path)
 	if err != nil {
-		http.Error(w, "internal error", http.StatusInternalServerError)
+		http.Error(w, "internal error", 2)
 		return
 	}
 	defer f.Close()
@@ -30,7 +30,7 @@ func MainHandler(w http.ResponseWriter, r *http.Request) {
 
 	_, err = io.Copy(w, f)
 	if err != nil {
-		http.Error(w, "internal error", http.StatusInternalServerError)
+		http.Error(w, "internal error", 3)
 	}
 }
 
@@ -69,7 +69,7 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
 
 	localFile.WriteString(result)
 
-	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte(result))
 }
