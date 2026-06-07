@@ -15,6 +15,11 @@ func MainHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func UploadHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
 	err := r.ParseMultipartForm(10 << 20)
 	if err != nil {
 		http.Error(w, "parse form error", http.StatusInternalServerError)
@@ -51,5 +56,10 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte(result))
+
+	_, err = w.Write([]byte(result))
+	if err != nil {
+		http.Error(w, "response error", http.StatusInternalServerError)
+		return
+	}
 }
