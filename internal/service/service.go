@@ -2,7 +2,6 @@ package service
 
 import (
 	"errors"
-	"strings"
 
 	"github.com/Yandex-Practicum/go1fl-sprint6-final/pkg/morse"
 )
@@ -10,7 +9,15 @@ import (
 var errEmptyStr = errors.New("empty string")
 
 func isMorseStr(str string) bool {
-	return strings.ToUpper(str) == strings.ToLower(str)
+	var hasLetter bool
+	for _, c := range str {
+		if c != '.' && c != '-' && c != ' ' {
+			hasLetter = true
+			break
+		}
+	}
+
+	return !hasLetter
 }
 
 func HandleStr(str string) (string, error) {
